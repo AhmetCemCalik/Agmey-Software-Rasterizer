@@ -1,4 +1,5 @@
 ![Gameplay Screenshot 1](https://github.com/user-attachments/assets/fb09cfdb-7bc8-42ec-8fa8-7cc25a6dbdec)
+<img src="https://github.com/user-attachments/assets/fb09cfdb-7bc8-42ec-8fa8-7cc25a6dbdec" alt="Gameplay Screenshot 1" height="500">
 
 A lightweight, purely CPU-driven 3D software rasterizer built from scratch in C++ and SDL2. This engine bypasses modern hardware acceleration and graphics APIs (like OpenGL or Vulkan) to replicate the authentic rendering architecture of mid-90s games like *DOOM* and *Duke Nukem 3D*. The entire core geometry pipeline runs in approximately 1,900 lines of code with texture handling included.
 
