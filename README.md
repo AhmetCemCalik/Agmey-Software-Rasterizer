@@ -1,8 +1,4 @@
-# Custom 2.5D Software Rasterizer
-
-![Gameplay Screenshot 1](<img width="1277" height="794" alt="Screenshot 2026-09-12 at 20 28 16" src="https://github.com/user-attachments/assets/fb09cfdb-7bc8-42ec-8fa8-7cc25a6dbdec" />
-)
-
+![Gameplay Screenshot 1](https://github.com/user-attachments/assets/fb09cfdb-7bc8-42ec-8fa8-7cc25a6dbdec)
 
 A lightweight, purely CPU-driven 3D software rasterizer built from scratch in C++ and SDL2. This engine bypasses modern hardware acceleration and graphics APIs (like OpenGL or Vulkan) to replicate the authentic rendering architecture of mid-90s games like *DOOM* and *Duke Nukem 3D*. The entire core geometry pipeline runs in approximately 1,900 lines of code with texture handling included.
 
