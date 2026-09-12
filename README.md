@@ -1,161 +1,43 @@
-main.cpp
-Game
-Renderer
-Raycaster
-Texture
-World
-Player
-Input
+# Custom 2.5D Software Rasterizer
 
+![Gameplay Screenshot 1](link-to-your-image-1.jpg)
+![Gameplay Screenshot 2](link-to-your-image-2.jpg)
 
-now check both the header and the cpp for the game. especially if we are passing the right things into the functions:
+A lightweight, purely CPU-driven 3D software rasterizer built from scratch in C++ and SDL2. This engine bypasses modern hardware acceleration and graphics APIs (like OpenGL or Vulkan) to replicate the authentic rendering architecture of mid-90s games like *DOOM* and *Duke Nukem 3D*. The entire core geometry pipeline runs in approximately 1,900 lines of code with texture handling included.
 
-#pragma once
+## Core Implementation
+* **Architecture:** Portal-based sector rendering (not raycasting). Walls are rendered via mathematical Vertex Projection, allowing for non-orthogonal geometry and varying floor/ceiling heights.
+* **Floor Casting:** Floors and ceilings are drawn using horizontal Inverse Projection with bitwise math optimizations to eliminate costly floating-point divisions and modulo operators.
+* **Lighting & Fog:** Features dynamic, sector-based lighting (`0.0` to `1.0` multipliers) via direct 32-bit channel manipulation, alongside depth-based distance fogging.
+* **Performance:** Fixed-point logic and cache-friendly data structures keep frame rates high despite relying strictly on the CPU for all geometry clipping and pixel drawing.
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include "../player/Player.h"
-#include "../world/Map.h"
-#include "../rendering/Renderer.h"
-#include "../world/WorldObjects.h"
+## Properties
+The map and textures are completely customizable through the assets folder. The engine will handle loading the map and the textures as long as the manifests are configured correctly. Currently, correct manifest implementation is not documented, altough i believe it is easily inferrable through the comments provided in text files.
 
-class Game
-{
-public:
-    bool init();
-    void close();
+## Setup & Build Guide
 
-    void updatePlayer( Player& player, Map& map );
-    bool checkLineIntersection( Vx k0, Vx k1, Vx l0, Vx l1 );
-    bool checkPlayerWallCollision( const Player& player, Vx targetPos, const Map& map );
+### Prerequisites
+* A C++20 compatible compiler
+* [SDL2](https://libsdl.org/) and [SDL2_image](https://github.com/libsdl-org/SDL_image)
+* `make` or `CMake`
 
-private:
-    SDL_Window* gwindow = nullptr;
+### Compiling
+If building via Makefile, ensure your optimization flags are set (e.g., `-O3`) to allow the CPU to handle the inverse projection math efficiently. Refer to the existing Makefile in the project repo.
 
-    Player player;
-    Map map;
-    Renderer renderer;
+```bash
+# Clone the repository
+git clone [https://github.com/AhmetCemCalik/Agmey-Software-Rasterizer.git](https://github.com/AhmetCemCalik/Agmey-Software-Rasterizer.git)
+cd portal-engine
 
-    bool running = false;
-};
+# Build the project
+make
 
------------------------
+# Run the engine
+./main-doom
+```
 
-#include "Game.h"
-#include "../Config.h"
-#include <iostream>
+### Remarks
 
-bool Game::init()
-{
-    bool success = true;
+This repository is built inside Apple M Series ARM64 architecture and filesystems are configured according to the said architecture. I have not tested compilations in Windows or any other OS, but since the project is entirely SDL and CPP, an executable should be achievable with minor configurations.
 
-    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
-        std::cout << "Failed to initialize sdl. Error: " << SDL_GetError() << '\n';
-        success = false;
-    } else {
-        gwindow = SDL_CreateWindow( "Agmey's FPS", SDL_WINDOWPOS_UNDEFINED, 
-            SDL_WINDOWPOS_UNDEFINED, Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT, 0 );
-        if ( gwindow == NULL ) {
-            std::cout << "Failed to create window. Error: " << SDL_GetError() << '\n';
-            success = false;
-        }
-
-        int imgFlags = IMG_INIT_PNG;
-        if ( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-            std::cout << "Failed to initialize image subsystem. Error: " << IMG_GetError() << '\n';
-            success = false;
-        }
-
-        if ( TTF_Init() < 0 ) {
-                std::cout << "Failed to initialize TTF. Error: " << TTF_GetError() << '\n';
-                success = false;
-            }
-    }
-
-    return success;
-}
-
-void Game::close()
-{
-    SDL_DestroyWindow( gwindow );
-    gwindow = NULL;
-
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
-}
-
-bool checkLineIntersection( Vx k0, Vx k1, Vx l0, Vx l1 )
-{
-    // Returns 1 if the lines intersect, 0 otherwise
-
-    float denom = ( ( k0.x - k1.x ) * ( l0.y - l1.y ) - ( k0.y - k1.y ) * ( l0.x - l1.x ) );
-    constexpr float EPSILON = 1e-6f;
-
-    if ( std::abs( denom ) < EPSILON )
-        return false;
-
-    float tNum = ( ( k0.x - l0.x ) * (l0.y - l1.y ) - ( k0.y - l0.y ) * ( l0.x - l1.x ) );
-    float uNum = ( ( k0.y - k1.y ) * ( k0.x - l0.x ) - ( k0.x - k1.x ) * ( k0.y - l0.y ) );
-    
-    float t = tNum / denom;
-    float u = uNum / denom;
-
-    if ( 0.0f <= t && t <= 1.0f && 0.0f <= u && u <= 1.0f ) return true;
-    return false;
-}
-
-bool checkPlayerWallCollision( const Player& player, Vx targetPos, const Map& map )
-{
-    Vx initialPos = { player.posX, player.posY };
-
-    const Sector& sector = map.sectors[player.sector];
-
-    for ( size_t i = sector.firstWall; i < sector.firstWall + sector.wallCount; ++i )
-    {
-        const Wall& wall = map.walls[i];
-
-        if ( checkLineIntersection( initialPos, targetPos, wall.a, wall.b ) && wall.portal == -1 ) return true;
-    }
-
-    return false;
-}
-
-void Game::updatePlayer( Player& player, Map& map )
-{
-    const Uint8* keyState = SDL_GetKeyboardState( NULL );
-
-    // Move forward if no wall
-    if ( keyState[ SDL_SCANCODE_W ] ) {
-        Vx targetPosX = { player.posX + player.dirX * Config::MOVE_SPEED, player.posY };
-        if ( checkPlayerWallCollision( player, targetPosX, map ) == false ) player.posX += player.dirX * Config::MOVE_SPEED;
-        Vx targetPosY = { player.posX, player.posY + player.dirY * Config::MOVE_SPEED };
-        if ( checkPlayerWallCollision( player, targetPosY, map ) ) player.posY += player.dirY * Config::MOVE_SPEED;
-    }
-    // Move backwards if no wall
-    if ( keyState[ SDL_SCANCODE_S ] ) {
-        Vx targetPosX = { player.posX - player.dirX * Config::MOVE_SPEED, player.posY };
-        if ( checkPlayerWallCollision( player, targetPosX, map ) == false ) player.posX -= player.dirX *Config::MOVE_SPEED;
-        Vx targetPosY = { player.posX, player.posY - player.dirY * Config::MOVE_SPEED };
-        if ( checkPlayerWallCollision( player, targetPosY, map ) == false ) player.posY -= player.dirY * Config::MOVE_SPEED;
-    }
-    // Rotate right
-    if ( keyState[ SDL_SCANCODE_D ] ) {
-        float oldDirX = player.dirX;
-        player.dirX = player.dirX * cos( -Config::ROT_SPEED ) - player.dirY * sin( -Config::ROT_SPEED );
-        player.dirY = oldDirX * sin( -Config::ROT_SPEED ) + player.dirY * cos( -Config::ROT_SPEED );
-        float oldPlaneX = player.planeX;
-        player.planeX = player.planeX * cos( -Config::ROT_SPEED ) - player.planeY * sin( -Config::ROT_SPEED );
-        player.planeY = oldPlaneX * sin( -Config::ROT_SPEED ) + player.planeY * cos( -Config::ROT_SPEED );
-    }
-    // Rotate left
-    if ( keyState[ SDL_SCANCODE_A ] ) {
-        float oldDirX = player.dirX;
-        player.dirX = player.dirX * cos( Config::ROT_SPEED ) - player.dirY * sin( Config::ROT_SPEED );
-        player.dirY = oldDirX * sin( Config::ROT_SPEED ) + player.dirY * cos( Config::ROT_SPEED );
-        float oldPlaneX = player.planeX;
-        player.planeX = player.planeX * cos( Config::ROT_SPEED ) - player.planeY * sin( Config::ROT_SPEED );
-        player.planeY = oldPlaneX * sin( Config::ROT_SPEED ) + player.planeY * cos( Config::ROT_SPEED );
-    }
-}
+The textures are free assets found in the internet, the original source can be tracked through [https://stickyteethgames.itch.io/rust-textures](https://stickyteethgames.itch.io/rust-textures) and is licensed under CC0.
