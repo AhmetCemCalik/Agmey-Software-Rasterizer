@@ -1,0 +1,80 @@
+[SECTORS]
+# id  firstWall  wallCount  zfloor  zceil   tfloor  tceil   lightLevel
+1     0          8          0.0     3.0     2       1       0.8
+2     8          4          0.5     2.5     2       3       0.6
+3     12         5          1.0     5.0     4       5       1.0
+4     17         4         -0.5     3.0     3       2       0.5
+5     21         3         -1.0     2.0     6       7       0.1
+6     24         4         -0.5     2.5     2       1       0.6
+7     28         4         -1.0     2.0     4       3       0.8
+8     32         6          0.5     4.0     5       2       0.9
+9     38         4         -2.0     4.0     6       2       0.2
+10    42         4          3.0     7.0     2       4       1.0
+
+[WALLS]
+# SECTOR 1 (Main Hub - Octagon)
+# ax  ay  bx  by  portal    tex
+-2  4   2  4   2         0
+ 2  4   4  2   0         1
+ 4  2   4 -2   4         2
+ 4 -2   2 -4   0         3
+ 2 -4  -2 -4   6         4
+-2 -4  -4 -2   0         5
+-4 -2  -4  2   8         6
+-4  2  -2  4   0         7
+
+# SECTOR 2 (Northern Corridor - Step Up)
+ 2  4  -2  4   1         0
+-2  4  -2  8   0         1
+-2  8   2  8   3         2
+ 2  8   2  4   0         3
+
+# SECTOR 3 (The Sentinel's Courtyard - Diamond)
+ 2  8  -2  8   2         4
+-2  8  -6  12  0         5
+-6  12  0  16  0         6
+ 0  16  6  12  10        7
+ 6  12  2  8   0         0
+
+# SECTOR 4 (Homeric Room - Trapezoid)
+ 4 -2   4  2   1         1
+ 4  2   8  6   0         2
+ 8  6   8 -6   5         3
+ 8 -6   4 -2   0         4
+
+# SECTOR 5 (The Persian Pit - Pitch Black Triangle)
+ 8 -6   8  6   4         5
+ 8  6   12 0   0         6
+ 12 0   8 -6   0         7
+
+# SECTOR 6 (Southern Corridor - Step Down)
+-2 -4   2 -4   1         0
+ 2 -4   2 -8   0         1
+ 2 -8  -2 -8   7         2
+-2 -8  -2 -4   0         3
+
+# SECTOR 7 (Tristana's Balcony - Overlook)
+-2 -8   2 -8   6         4
+ 2 -8   6 -10  0         5
+ 6 -10 -6 -10  0         6
+-6 -10 -2 -8   0         7
+
+# SECTOR 8 (Argiope Arena - Hexagon)
+-4  2  -4 -2   1         0
+-4 -2  -8 -6   0         1
+-8 -6  -12 -2  0         2
+-12 -2 -12 2   9         3
+-12 2  -8  6   0         4
+-8  6  -4  2   0         5
+
+# SECTOR 9 (Cubari Depths - Deep Trench)
+-12 2  -12 -2  8         6
+-12 -2 -16 -2  0         7
+-16 -2 -16 2   0         0
+-16 2  -12 2   0         1
+
+# SECTOR 10 (The Zenith - Elevated High Tower)
+ 6  12  0  16  3         2
+ 0  16  4  20  0         3
+ 4  20  10 16  0         4
+ 10 16  6  12  0         5

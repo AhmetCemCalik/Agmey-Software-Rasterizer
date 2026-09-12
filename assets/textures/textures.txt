@@ -1,0 +1,10 @@
+[TEXTURES]
+#   id  path
+    0   assets/textures/Brick1.png
+    1   assets/textures/Brick2.png
+    2   assets/textures/GreenWater.png
+    3   assets/textures/RustFloor1.png
+    4   assets/textures/RustFloor2.png
+    5   assets/textures/RustWall4.png
+    6   assets/textures/RustWall5.png
+    7   assets/textures/Steel2.png
