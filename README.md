@@ -2,6 +2,8 @@
 
 A lightweight, purely CPU-driven 3D software rasterizer built from scratch in C++ and SDL2. This engine bypasses modern hardware acceleration and graphics APIs (like OpenGL or Vulkan) to replicate the authentic rendering architecture of mid-90s games like *DOOM* and *Duke Nukem 3D*. The entire core geometry pipeline runs in approximately 1,900 lines of code with texture handling included.
 
+It is my obligation to thank [jdh](https://github.com/jdah) and [Lode Vandevenne](https://github.com/lvandeve) for their documentation, tutorials and notes on raycasting, 2.5D graphics and SDL. While being original on the idea and implementation, this Software Rasterizers follows on their guidance.
+
 ## Core Implementation
 * **Architecture:** Portal-based sector rendering (not raycasting). Walls are rendered via mathematical Vertex Projection, allowing for non-orthogonal geometry and varying floor/ceiling heights.
 * **Floor Casting:** Floors and ceilings are drawn using horizontal Inverse Projection with bitwise math optimizations to eliminate costly floating-point divisions and modulo operators.
