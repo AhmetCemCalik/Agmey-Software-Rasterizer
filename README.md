@@ -1,6 +1,6 @@
-<img width="2784" height="2208" alt="image" src="https://github.com/user-attachments/assets/e55c5af7-6028-4cf6-aa72-7f11ab7dc293" /># Custom 2.5D Software Rasterizer
+# Custom 2.5D Software Rasterizer
 
-![Gameplay Screenshot 1](<img width="640" height="474" alt="PHOTO-2026-09-12-20-24-53" src="https://github.com/user-attachments/assets/bb1cb995-5c9f-4c7d-a857-de2dc639211b" />
+![Gameplay Screenshot 1](<img width="1277" height="794" alt="Screenshot 2026-09-12 at 20 28 16" src="https://github.com/user-attachments/assets/fb09cfdb-7bc8-42ec-8fa8-7cc25a6dbdec" />
 )
 
 
